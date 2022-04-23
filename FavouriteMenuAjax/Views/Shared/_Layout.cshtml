@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FavouriteMenuAjax</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FavouriteMenuAjax.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css" />
+</head>
+<body>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+            @RenderBody()
+
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - FavouriteMenuAjax - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+
+    
+    <script>
+        // Add/Remove favourite item from menu without refreshing the page !
+       function CheckAvailability(valId) {
+                $.ajax({
+                    url: '/Home/UpdateFavourite/',
+                    type: "POST",
+                    dataType: "json",
+                    data: { id: valId },
+                    success: function (response) {
+                        console.log(response);// CHECK ALL PROPS IN CONSOLE
+
+                        $("#favCounter").html(response.count);
+                       var vmTemplateName2 = "'"+valId+"-Li'"; // dont touch
+                       var vmTemplateName3 = "'"+valId+"-heartIcon'"; 
+
+
+                        if(response.isExisted == false)
+                        {
+                        $("#favUl").append('<li id="'+valId+'-Li"><a href="/product/details/'+valId+'"><span class="fas fa-image"></span><small>'+response.entity.name+'</small></a></li>');
+                        $("[id="+vmTemplateName3+"]").removeClass('far fa-heart').addClass('fas fa-heart');
+                        }
+                        else
+                        {
+                        $("[id="+vmTemplateName2+"]").remove();
+                        $("[id="+vmTemplateName3+"]").removeClass('fas fa-heart').addClass('far fa-heart');
+                        }
+
+                    },
+                    error: function (e) {
+                       
+                    }
+
+                });
+            };    
+    </script>
+    <script defer src="https://use.fontawesome.com/releases/v6.1.1/js/all.js" integrity="sha384-xBXmu0dk1bEoiwd71wOonQLyH+VpgR1XcDH3rtxrLww5ajNTuMvBdL5SOiFZnNdp" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

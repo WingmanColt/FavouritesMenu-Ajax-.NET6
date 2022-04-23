@@ -1,0 +1,104 @@
+﻿@using FavouriteMenuAjax.ViewModels
+@model HeaderMenuViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+    string iconType;
+}
+<style>
+.icon {
+  font-size: 24px;
+  color: #696969;
+}
+
+.count {
+  position: absolute;
+  right: -8px;
+  top: -4px;
+  height: 16px;
+  width: 16px;
+  background: #1967D2;
+  border-radius: 50%;
+  color: #ffffff;
+  line-height: 16px;
+  font-size: 12px;
+}
+
+</style>
+    <header>
+        <ul class="main-header navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FavouriteMenuAjax</a></li>
+                
+
+                <li>
+
+                    <div class="dropdown">
+            <a class="btn btn-primary dropdown-toggle" style="background-color:unset;"  href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                      @if (@Model.FavouritesCount > 0)
+                        {
+                             <span class="count" id="favCounter">@Model.FavouritesCount</span>
+                             <span class="icon fas fa-heart"></span>
+                        }
+                        else
+                        {
+                            <span class="icon far fa-heart"></span>
+                        }
+                </a>
+
+         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="favUl">
+
+          <a asp-controller="Home" asp-action="RemoveFavourites" asp-route-returnUrl="">
+           <i class="text-danger fas fa-trash-alt"></i> <small>Remove All</small>
+          </a>
+           @if (Model.Favourites is not null)
+                    {
+                        @foreach (var entity in Model.Favourites)
+                        {
+                            <li id="@entity.Id-Li">
+                                  <a asp-area="" asp-controller="#" asp-action="Details">
+                                 <span class="fas fa-image"></span>
+                                <small>@entity.Name</small>
+                                </a>
+                            </li>
+
+                        }
+                    }
+
+                </ul>
+            </div>
+
+                      
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li >
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    
+                    <partial name="_LoginPartial" />
+            
+          
+        </ul>
+    </header>
+
+        <div class="container">
+        <main role="main" class="pb-3">
+<div class="text-center">
+    @if (Model.Entities is not null)
+    {
+        @foreach (var item in Model.Entities)
+        {
+            <p>Item Id: @item.Name</p>
+            <p>Item title: @item.Name</p> 
+            <b>Button to click:</b>
+
+            iconType = @item.isInFavourites ? "fas fa-heart text-danger" : "far fa-heart text-black-50";
+            <button type="button" value='Submit' onclick="CheckAvailability(@item.Id)" >
+                <span class="@iconType" id="@item.Id-heartIcon"></span>
+            </button>
+        }
+
+    }
+</div>
+        </main>
+    </div>
